@@ -12,7 +12,7 @@ def create_notification(user):
 """)
 
     send_mail(
-        subject="Quickpay Notification",
+        subject="Welcome to Quickpay",
         message=notification.message,
         from_email='',
         recipient_list=[user.email],
