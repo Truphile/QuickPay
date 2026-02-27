@@ -10,7 +10,7 @@ class Notification(models.Model):
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    reference = models.CharField(max_length=40, unique=True, blank=True)
+    reference = models.CharField(max_length=40, unique=True, blank=True, null=True)
     message = models.TextField()
     channel = models.CharField(max_length=40, choices=CHANNEL_TYPE, blank=True, default='EMAIL')
     event_type = models.CharField(max_length=30)
