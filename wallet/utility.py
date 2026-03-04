@@ -8,4 +8,5 @@ def generate_account_number():
    return "44" + str(random.randrange(000000,999999))
 
 def generate_reference_id():
-   return "NKY" + str(random.shuffle([9000]))
+   number = random.randint(100000,999999)
+   return "NKY" + str(number)
