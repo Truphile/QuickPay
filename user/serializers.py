@@ -16,3 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         wallet.objects.create(user=user, wallet_name=user.phone[1:])
         return user
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=100)
