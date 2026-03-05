@@ -1,5 +1,5 @@
 
-from .views import register
+from .views import register, login
 from django.urls import path
 
 
