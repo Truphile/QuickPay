@@ -12,8 +12,13 @@ def register(request):
     serializer = UserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user, wallet = create_user_and_wallet(serializer.validated_data)
-
-
     return Response({"message": "Registration successful"}, status=status.HTTP_201_CREATED )
+
+
+@api_view(['POST'])
+def login(request):
+    serializer = UserSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response({"message": "Login successful", "data": serializer.validated_data}, status=status.HTTP_200_OK)
 
 
