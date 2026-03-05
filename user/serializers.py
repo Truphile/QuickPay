@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework_simplejwt.tokens import RefreshToken
 import wallet
 from user.models import User
 from wallet.models import Wallet
