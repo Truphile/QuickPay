@@ -1,6 +1,6 @@
 from django.db import transaction
 from user.services import create_user
-from wallet.services import create_wallet
+from wallet.services import create_wallet_service
 from notification.services import create_notification
 
 
