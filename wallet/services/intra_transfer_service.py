@@ -26,4 +26,13 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
     sender_wallet.save(update_fields=['balance'])
     recipient_wallet.save(update_fields=['balance'])
 
+    tx = Transaction.objects.create(
+        sender=sender,
+        recipient=recipient,
+        amount=amount,
+        idempotent_key=idempotent_key,
+        transaction_type='CREDIT',
+        description=description,
+    )
+
 
