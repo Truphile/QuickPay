@@ -1,7 +1,7 @@
 from decimal import Decimal
 from uuid import UUID
 
-from wallet.models import Wallet, Transaction
+from wallet.models import Wallet, Transaction, Ledger
 
 
 def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal, idempotent_key: UUID, description : str):
@@ -32,7 +32,22 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         amount=amount,
         idempotent_key=idempotent_key,
         transaction_type='CREDIT',
+        transaction_status='SUCCESSFUL',
         description=description,
     )
+
+    Ledger.objects.create(
+        transaction=tx,
+        amount=amount,
+        wallet=sender_wallet,
+        balance=sender_wallet.balance,
+        transaction_type='CREDIT',
+    )
+
+
+
+    return tx
+
+
 
 
