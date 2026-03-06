@@ -7,6 +7,7 @@ class WalletTransferSerializer(serializers.ModelSerializer):
     recipient_wallet = serializers.CharField(max_length=10)
     amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     idempotency_key = serializers.UUIDField(read_only=True)
+    description = serializers.CharField(max_length=200, required=False)
 
     def validate_amount(self, value):
         if value < 0:
