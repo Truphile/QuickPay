@@ -21,12 +21,7 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         return existing_tx
 
     with transaction.atomic():
-
-        try:
-            recipient_wallet = Wallet.objects.select_for_update().get(pk=recipient.pk)
-        except Wallet.DoesNotExist:
-            raise Exception("Wallet does not exist")
-
+        recipient_wallet = Wallet.objects.select_for_update().get(pk=recipient.pk)
         sender_wallet = Wallet.objects.select_for_update().get(pk=sender.pk)
 
         sender_wallet.balance -= amount
@@ -49,7 +44,7 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         amount=amount,
         wallet=sender_wallet,
         balance_after=sender_wallet.balance,
-        transaction_type='CREDIT',
+        entry_type='CREDIT',
     )
 
     Ledger.objects.create(
@@ -57,7 +52,7 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         amount=amount,
         wallet=recipient_wallet,
         balance_after=recipient_wallet.balance,
-        transaction_type='CREDIT',
+        entry_type='CREDIT',
     )
 
     return tx
