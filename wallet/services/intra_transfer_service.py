@@ -44,7 +44,13 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         transaction_type='CREDIT',
     )
 
-
+    Ledger.objects.create(
+        transaction=tx,
+        amount=amount,
+        wallet=recipient_wallet,
+        balance=recipient_wallet.balance,
+        transaction_type='CREDIT',
+    )
 
     return tx
 
