@@ -48,7 +48,7 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         transaction=tx,
         amount=amount,
         wallet=sender_wallet,
-        balance=sender_wallet.balance,
+        balance_after=sender_wallet.balance,
         transaction_type='CREDIT',
     )
 
@@ -56,7 +56,7 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         transaction=tx,
         amount=amount,
         wallet=recipient_wallet,
-        balance=recipient_wallet.balance,
+        balance_after=recipient_wallet.balance,
         transaction_type='CREDIT',
     )
 
