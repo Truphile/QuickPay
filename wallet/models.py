@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.db import models
 
+
 from wallet.utility import generate_reference_id, generate_account_number
 
 
@@ -17,7 +18,7 @@ class Wallet(models.Model):
 
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True)
-    wallet_number = models.CharField(max_length=10, unique=True)
+    wallet_number = models.CharField(max_length=10, unique=True, primary_key=True)
     account_number = models.CharField(max_length=10, unique=True,blank=True, default=generate_account_number)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='NGN')
