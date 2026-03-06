@@ -1,6 +1,8 @@
 from decimal import Decimal
 from uuid import UUID
 
+from django.db import transaction
+
 from wallet.models import Wallet, Transaction, Ledger
 
 
@@ -14,17 +16,19 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
     if amount > sender.balance:
         raise Exception("Insufficient balance")
 
-    existing_tx = Transaction.objects.filter(idempotent_key=idempotent_key).exists()
+    existing_tx = Transaction.objects.filter(idempotent_key=idempotent_key).first()
     if existing_tx:
         return existing_tx
 
-    recipient_wallet = Wallet.objects.select_for_update(wallet_number=recipient.wallet_number)
-    sender_wallet = Wallet.objects.select_for_update(wallet_number=sender.wallet_number)
+    with transaction.atomic():
 
-    sender_wallet.balance -= amount
-    recipient_wallet.balance += amount
-    sender_wallet.save(update_fields=['balance'])
-    recipient_wallet.save(update_fields=['balance'])
+        recipient_wallet = Wallet.objects.select_for_update().get(pk=recipient.pk)
+        sender_wallet = Wallet.objects.select_for_update().get(pk=sender.pk)
+
+        sender_wallet.balance -= amount
+        recipient_wallet.balance += amount
+        sender_wallet.save(update_fields=['balance'])
+        recipient_wallet.save(update_fields=['balance'])
 
     tx = Transaction.objects.create(
         sender=sender,
