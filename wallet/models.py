@@ -24,7 +24,7 @@ class Wallet(models.Model):
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='NGN')
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=PROTECT)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=PROTECT, null=True, blank=True)
 
 
 class Transaction(models.Model):
