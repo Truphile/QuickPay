@@ -147,5 +147,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    # 'ACCESS_TOKEN'
+    # 'ACCESS_TOKEN_LIFETIME' : 3600
+'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
+'AUTH_HEADER_TYPES': ('Bearer',),
 }
