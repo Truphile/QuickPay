@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from wallet.models import Wallet
+from wallet.models import Wallet, Transaction
 
 
 class WalletTransferSerializer(serializers.ModelSerializer):
@@ -21,4 +21,10 @@ class WalletTransferSerializer(serializers.ModelSerializer):
             raise Exception("Wallet does not exist")
 
         return recipient_wallet
+
+class RecentTransactionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = {'receiver','amount','reference', 'status', 'created_at', 'transaction'}
+
 
