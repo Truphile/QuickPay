@@ -22,6 +22,11 @@ class WalletTransferSerializer(serializers.ModelSerializer):
 
         return recipient_wallet
 
+class DepositSerializer(serializers.Serializer):
+
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+
 class RecentTransactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
