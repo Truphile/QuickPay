@@ -27,4 +27,10 @@ class RecentTransactionsSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = {'receiver','amount','reference', 'status', 'created_at', 'transaction'}
 
-
+class DashboardSerializer(serializers.ModelSerializer):
+    message = serializers.CharField(max_length=55)
+    wallet = serializers.CharField(max_length=10)
+    balance = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField(max_length=3)
+    status = serializers.CharField(max_length=10)
+    transactions = RecentTransactionsSerializer(many=True)
