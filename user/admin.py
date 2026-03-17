@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+
 
 from user.models import User
 
@@ -16,5 +16,9 @@ class UserAdmin(BaseUserAdmin):
             "fields": ("username","usable_password", "password1", "password2", "first_name", "last_name", "email", "phone"),
         },
     ),
-    )
+        )
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.is_superuser:
+            return False
+        return super().has_delete_permission(request, obj)
 
