@@ -23,9 +23,12 @@ class WalletTransferSerializer(serializers.ModelSerializer):
         return recipient_wallet
 
 class DepositSerializer(serializers.Serializer):
-
     amount = serializers.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+    def validate_amount(self, value):
+        if value < 0:
+            raise Exception("Invalid amount. Amount cannot be greater than zero.")
+        return value
 
 class RecentTransactionsSerializer(serializers.ModelSerializer):
     class Meta:
