@@ -30,6 +30,9 @@ class DepositSerializer(serializers.Serializer):
             raise Exception("Invalid amount. Amount cannot be greater than zero.")
         return value
 
+class FundWalletSerializer(serializers.Serializer):
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+
 class RecentTransactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
