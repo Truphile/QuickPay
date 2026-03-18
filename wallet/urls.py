@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import transfer_wallet, fund_wallet
+from .views import transfer_wallet, fund_wallet, funded_wallet
 
 urlpatterns = [
-    path("transfer/",transfer_wallet,name="transfer")
-    path('deposit/', fund_wallet, name="deposit")
-    path('callback/', paystack_callback, name="paystack_callback")
+    path("transfer/",transfer_wallet,name="transfer"),
+    path('deposit/', fund_wallet, name="deposit"),
+    path('callback/', paystack_callback, name="paystack_callback"),
+    path('fund/', funded_wallet, name="fund_wallet"),
+    
 ]
