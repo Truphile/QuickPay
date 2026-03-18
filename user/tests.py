@@ -42,3 +42,17 @@ class TestSignup(TestCase):
             response = self.client.post(self.url, self.data, format="json")
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(User.objects.count(), 1)
+
+
+        def test_signup_returns_400(self):
+            data = {
+                "first_name": "Nissi",
+                "last_name": "Ijioma",
+                "email": "angelonissil@gmail.com",
+                "phone": "09029931655",
+                "username": "scripted",
+                "password": "hello123@",
+            }
+
+            response = self.client.post(self.url, data, format="json")
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
