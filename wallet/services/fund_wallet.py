@@ -1,10 +1,12 @@
+from decimal import Decimal
 from http.client import responses
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites import requests
+from django.db import transaction
 
-
+from wallet.models import Transaction
 
 user = get_user_model()
 
@@ -33,4 +35,20 @@ def verify_paystack_payment(reference):
     url = f'{settings.PAYSTACK_VERIFY_URL} {reference}'
     response = requests.get(url, headers=headers)
     return response.json()
+
+def credit_wallet(wallet, amount: Decimal, reference: str):
+    amount = Decimal(amount)
+    with transaction.atomic():
+        wallet = wallet.objects.select_for_update().get(pk=wallet.pk)
+        wallet.balance += amount
+        wallet.save(update_fields=['balance'])
+
+        tx = Transaction.objects.create(
+            amount=amount,
+            sender=wallet,
+            reference=reference,
+            recipient=wallet,
+            transaction_type='CREDIT',
+            status='SUCCESS'
+        )
 
