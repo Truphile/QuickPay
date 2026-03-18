@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.sites import requests
 from django.db import transaction
 
-from wallet.models import Transaction
+from wallet.models import Transaction, Ledger
 
 user = get_user_model()
 
@@ -51,4 +51,14 @@ def credit_wallet(wallet, amount: Decimal, reference: str):
             transaction_type='CREDIT',
             status='SUCCESS'
         )
+
+        Ledger.objects.create(
+            transaction=tx,
+            amount=amount,
+            wallet=wallet,
+            entry_type='CREDIT',
+            balance_after=wallet.balance
+        )
+
+        return tx
 
