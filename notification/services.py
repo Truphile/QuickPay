@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 import notification
 from notification.models import Notification
 from django.core.mail import send_mail
@@ -43,6 +45,23 @@ def create_transfer_notification(user, amount):
                                                event_type='USER_TRANSFER_NOTIFICATION',)
 
     send_mail(subject="wallet transfer notification",
+              message=notification.message,
+              from_email='',
+              recipient_list=[user.email],
+              fail_silently=True)
+    notification.is_read = True
+    notification.save()
+
+
+def deposit_notification(user, amount):
+    wallet = get_object_or_404(wallet, user=user)
+    notification = Notification.objects.create(wallet=user.wallet.wallet_number,
+                                               message=f"""***DEPOSIT SUCCESSFUL***
+                                               {amount} has been deposited to ypur wallet,
+                                               your new balance is {wallet.balance}""",
+                                               event_type='WALLET_DEPOSIT_NOTIFICATION')
+
+    send_mail(subject="wallet deposit notification",
               message=notification.message,
               from_email='',
               recipient_list=[user.email],
