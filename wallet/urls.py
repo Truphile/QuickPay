@@ -6,5 +6,5 @@ urlpatterns = [
     path('deposit/', fund_wallet, name="deposit"),
     path('callback/', paystack_callback, name="paystack_callback"),
     path('fund/', funded_wallet, name="fund_wallet"),
-    
+    path('dashboard/', dashboard, name="dashboard"),
 ]
