@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from wallet.services.deposit import deposit
 from .models import Wallet
-from .serializers import WalletTransferSerializer, DepositSerializer
+from .serializers import WalletTransferSerializer, DepositSerializer, FundWalletSerializer
 from wallet.services.intra_transfer_service import transfer_wallet_to_wallet
 from django.shortcuts import get_object_or_404
 
@@ -56,5 +56,17 @@ def fund_wallet(request):
             "created_at": transaction.created_at
         }, status=status.HTTP_201_CREATED
     )
+
+def funded_wallet(request):
+    serializer = FundWalletSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    user = request.user
+    amount = serializer.validated_data['amount']
+
+    payment_response = Initiate_paystack_payment(user, amount)
+
+    return Response(payment_response. status=status.HTTP_200_Ok)
+    
 
 
