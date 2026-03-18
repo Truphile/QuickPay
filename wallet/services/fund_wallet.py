@@ -5,9 +5,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites import requests
 from django.db import transaction
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from user.models import User
 from wallet.models import Transaction, Ledger
 
 user = get_user_model()
@@ -68,3 +70,22 @@ def paystack_callback(request):
     reference = request.GET.get('reference')
     if not reference:
         return Response({'error': 'reference is required'},status=status.HTTP_400_BAD_REQUEST)
+
+    payment_data = verify_paystack_payment(reference)
+
+    amount = payment_data['data]['amount']/100
+    email = payment_data['data']['email']['customer']
+    user = User.objects.get(email=email)
+    wallet = user.wallet
+
+
+    tx = credit_wallet(wallet, amount, reference)
+    data = {
+        'reference': tx.reference,
+        'amount': tx.amount,
+        'status': tx.status,
+        'created_at': tx.created_at,
+    }
+
+    return Response(data, status=status.HTTP_200_OK)
+
