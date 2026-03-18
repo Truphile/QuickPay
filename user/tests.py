@@ -56,3 +56,9 @@ class TestSignup(TestCase):
 
             response = self.client.post(self.url, data, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+        def test_login_returns_200(self):
+            self.client.post(self.url, self.data, format="json")
+            response = self.client.post(self.login_url, self.login_data, format="json")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
