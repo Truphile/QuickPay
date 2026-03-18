@@ -2,6 +2,8 @@ import notification
 from notification.models import Notification
 from django.core.mail import send_mail
 
+from wallet.models import Wallet
+
 
 def create_notification(user):
     notification = Notification.objects.create(user=user,
@@ -29,7 +31,17 @@ def create_notification(user):
 
     notification.is_read = True
     notification.save()
-    notification.message
+    # notification.message
+
+def create_transfer_notification(user, amount):
+    wallet = Wallet.objects.create(user=user)
+    notification = Notification.objects.create(wallet=user.wallet.wallet_number,
+                                               message=f"""***CREDIT ALERT***
+                                               {amount} has been credited to ypur wallet,
+                                               your new balance is {wallet.balance}
+""",
+                                               event_type='USER_TRANSFER_NOTIFICATION',)
+
 
 
 
