@@ -1,5 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
+from rest_framework import status
+
+from user.models import User
 
 
 # Create your tests here.
@@ -30,6 +33,12 @@ class TestSignup(TestCase):
                 "password": "helix456",
             }
             self.login_data = {
-                "email": "chiedoziegochiamaka@gmail.com",
-                "password": "helix456"
+                "email": "angelonissil@gmail.com",
+                "password": "hello123@"
             }
+
+
+        def test_signup_returns_201(self):
+            response = self.client.post(self.url, self.data, format="json")
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(User.objects.count(), 1)
