@@ -42,6 +42,14 @@ def create_transfer_notification(user, amount):
 """,
                                                event_type='USER_TRANSFER_NOTIFICATION',)
 
+    send_mail(subject="wallet transfer notification",
+              message=notification.message,
+              from_email='',
+              recipient_list=[user.email],
+              fail_silently=True)
+    notification.is_read = True
+    notification.save()
+
 
 
 
