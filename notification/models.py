@@ -9,10 +9,13 @@ class Notification(models.Model):
         ('SMS', 'SMS'),
     )
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+
+    wallet = models.CharField(max_length=10, blank=True, null=True)
     reference = models.CharField(max_length=40, unique=True, blank=True, null=True)
     message = models.TextField()
     channel = models.CharField(max_length=40, choices=CHANNEL_TYPE, blank=True, default='EMAIL')
     event_type = models.CharField(max_length=30)
+    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
