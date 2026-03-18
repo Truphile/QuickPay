@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites import requests
 from django.db import transaction
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from wallet.models import Transaction, Ledger
 
@@ -61,4 +63,8 @@ def credit_wallet(wallet, amount: Decimal, reference: str):
         )
 
         return tx
-
+@api_view(['GET'])
+def paystack_callback(request):
+    reference = request.GET.get('reference')
+    if not reference:
+        return Response({'error': 'reference is required'},status=status.HTTP_400_BAD_REQUEST)
