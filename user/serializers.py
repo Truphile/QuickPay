@@ -12,10 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self, validated_data):
-        user = User.objects.create(**validated_data)
-        wallet.objects.create(owner=user, wallet_name=user.phone[1:])
-        return user
+    # def create(self, validated_data):
+    #     user = User.objects.create(**validated_data)
+    #     wallet.objects.create(owner=user, wallet_name=user.phone[1:])
+    #     return user
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
