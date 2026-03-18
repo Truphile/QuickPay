@@ -1,3 +1,5 @@
+from http.client import responses
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites import requests
@@ -21,5 +23,14 @@ def initiate_paystack_payment(user,amount):
     }
 
     response = requests.post(settings.PAYSTACK_URL, headers=headers, json=data)
+    return response.json()
+
+def verify_paystack_payment(reference):
+    headers = {
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    url = f'{settings.PAYSTACK_VERIFY_URL} {reference}'
+    response = requests.get(url, headers=headers)
     return response.json()
 
