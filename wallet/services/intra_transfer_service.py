@@ -20,6 +20,13 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
     if existing_tx:
         return existing_tx
 
+    # select_for_update() method is used to do pessmistic locking
+    # at the same you may be trying to do transfer out
+    # and an incoming transfer is entering your wallet
+    # These are two actions that will affect the balance.
+    # The method ensures that the incoming action is placed on hold
+    # till your transfer action has been fully processed.
+
     with transaction.atomic():
         recipient_wallet = Wallet.objects.select_for_update().get(pk=recipient.pk)
         sender_wallet = Wallet.objects.select_for_update().get(pk=sender.pk)
@@ -29,33 +36,33 @@ def transfer_wallet_to_wallet(sender: Wallet, recipient: Wallet, amount: Decimal
         sender_wallet.save(update_fields=['balance'])
         recipient_wallet.save(update_fields=['balance'])
 
-    tx = Transaction.objects.create(
+    transaction_info = Transaction.objects.create(
         sender=sender,
         recipient=recipient,
         amount=amount,
         idempotent_key=idempotent_key,
         transaction_type='CREDIT',
-        transaction_status='SUCCESSFUL',
+        status='CREATED',
         description=description,
     )
 
     Ledger.objects.create(
-        transaction=tx,
+        transaction=transaction_info,
         amount=amount,
         wallet=sender_wallet,
         balance_after=sender_wallet.balance,
-        entry_type='CREDIT',
+        entry_type='DEBIT',
     )
 
     Ledger.objects.create(
-        transaction=tx,
+        transaction=transaction_info,
         amount=amount,
         wallet=recipient_wallet,
         balance_after=recipient_wallet.balance,
         entry_type='CREDIT',
     )
 
-    return tx
+    return transaction_info
 
 
 
