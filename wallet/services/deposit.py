@@ -1,6 +1,9 @@
+from decimal import Decimal
+
 from django.db import transaction
 
-from wallet.models import Wallet, Transaction
+import wallet
+from wallet.models import Wallet, Transaction, Ledger
 
 
 def deposit(recipient: Wallet, amount: Decimal):
@@ -15,3 +18,13 @@ def deposit(recipient: Wallet, amount: Decimal):
                                                       amount=amount,
                                                       transaction_type='CREDIT',
                                                       status='CREATED',)
+        Ledger.objects.create(
+            transaction=transaction_info,
+            amount=amount,
+            wallet=wallet,
+            balance_after= recipient_wallet.balance,
+            entry_type='CREDIT',
+
+        )
+
+        return transaction_info
