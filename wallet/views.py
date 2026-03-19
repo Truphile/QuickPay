@@ -7,9 +7,12 @@ from wallet.services.deposit import deposit
 from wallet.services.fund_wallet import initiate_paystack_payment
 from notification.services import create_transfer_notification
 from .models import Wallet
-from .serializers import WalletTransferSerializer, DepositSerializer, FundWalletSerializer
+from .serializers import WalletTransferSerializer, DepositSerializer, FundWalletSerializer, DashboardSerializer
 from wallet.services.intra_transfer_service import transfer_wallet_to_wallet
 from django.shortcuts import get_object_or_404
+
+from .services.dashboard_service import get_dashboard_data
+
 
 # Create your views here.
 
@@ -74,6 +77,11 @@ def funded_wallet(request):
 
 
 
+def dashboard(request):
+    user = request.user
+    dashboard_data = get_dashboard_data(user)
+    serializer = DashboardSerializer(dashboard_data)
+    return Response(serializer.data, status= status.HTTP_200_OK)
 
 
 
