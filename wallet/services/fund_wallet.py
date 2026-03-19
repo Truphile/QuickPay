@@ -73,8 +73,8 @@ def paystack_callback(request):
 
     payment_data = verify_paystack_payment(reference)
 
-    amount = payment_data['data]['amount']/100
-    email = payment_data['data']['email']['customer']
+    amount = payment_data['data']['amount']/100
+    email = payment_data['data']['customer']['email']
     user = User.objects.get(email=email)
     wallet = user.wallet
 
