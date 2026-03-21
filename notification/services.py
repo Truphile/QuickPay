@@ -8,7 +8,7 @@ from wallet.models import Wallet
 
 
 def create_notification(user):
-    notification = Notification.objects.create(user=user,
+    notification = Notification.objects.create(wallet=user.wallet.wallet_number,
                                 message=f"""
                                 Hi {user.first_name} Welcome to Quickpay!
                                 Your wallet number is : {user.wallet.wallet_number}
@@ -54,7 +54,7 @@ def create_transfer_notification(user, amount):
 
 
 def deposit_notification(user, amount):
-    wallet = get_object_or_404(wallet, user=user)
+    wallet = get_object_or_404(Wallet, user=user)
     notification = Notification.objects.create(wallet=user.wallet.wallet_number,
                                                message=f"""***DEPOSIT SUCCESSFUL***
                                                {amount} has been deposited to ypur wallet,
