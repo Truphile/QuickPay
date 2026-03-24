@@ -41,7 +41,7 @@ def initiate_paystack_payment(user, wallet, amount):
         reference=reference,
         recipient=wallet,
         transaction_type='CREDIT',
-        status= 'PENDING'
+        status='PENDING'
     )
 
     response = requests.post(settings.PAYSTACK_URL, headers=headers, json=data)
@@ -63,14 +63,9 @@ def credit_wallet(wallet, amount: Decimal, reference: str):
         wallet_obj.balance += amount
         wallet_obj.save(update_fields=['balance'])
 
-        tx = Transaction.objects.create(
-            amount=amount,
-            sender=wallet,
-            reference=reference,
-            recipient=wallet,
-            transaction_type='CREDIT',
-            status='SUCCESS'
-        )
+        tx = Transaction.objects.get(reference=reference)
+        tx.status = 'SUCCESS'
+        tx.save(update_fields=['status'])
 
         Ledger.objects.create(
             transaction=tx,
