@@ -16,7 +16,7 @@ from wallet.models import Transaction, Ledger, Wallet
 
 user = get_user_model()
 
-def initiate_paystack_payment(user,amount):
+def initiate_paystack_payment(user, wallet, amount):
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
@@ -27,6 +27,8 @@ def initiate_paystack_payment(user,amount):
         'callback_url': 'http://localhost:8000/wallet/callback',
         'metadata': {
             'user_id': str(user.id),
+            'wallet_number': str(wallet.wallet_number),
+            'sender_name': str(wallet.user),
         }
     }
 
