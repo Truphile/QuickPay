@@ -3,7 +3,6 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.sites import requests
 from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -38,7 +37,7 @@ def verify_paystack_payment(reference):
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
-    }---
+    }
     url = f'{settings.PAYSTACK_VERIFY_URL}{reference}'
     response = requests.get(url, headers=headers)
     return response.json()
