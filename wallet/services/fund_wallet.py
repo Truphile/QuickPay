@@ -81,7 +81,11 @@ def paystack_callback(request):
             {'error': 'Payment verification failed'},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+    if payment_data['data']['status'] != 'success':
+        return Response(
+            {'error': 'Payment was not successful'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     amount = payment_data['data']['amount']/100
     email = payment_data['data']['customer']['email']
