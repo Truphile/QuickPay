@@ -8,15 +8,18 @@ from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import requests
 
 from user.models import User
-from wallet.models import Transaction, Ledger
+from wallet.models import Transaction, Ledger, Wallet
+
+
 
 user = get_user_model()
 
 def initiate_paystack_payment(user,amount):
     headers = {
-        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+        'Authorization': f'Bearer{settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
     data = {
@@ -35,17 +38,17 @@ def verify_paystack_payment(reference):
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
-    }
-    url = f'{settings.PAYSTACK_VERIFY_URL} {reference}'
+    }---
+    url = f'{settings.PAYSTACK_VERIFY_URL}{reference}'
     response = requests.get(url, headers=headers)
     return response.json()
 
 def credit_wallet(wallet, amount: Decimal, reference: str):
     amount = Decimal(amount)
     with transaction.atomic():
-        wallet = wallet.objects.select_for_update().get(pk=wallet.pk)
-        wallet.balance += amount
-        wallet.save(update_fields=['balance'])
+        wallet_obj = Wallet.objects.select_for_update().get(pk=wallet.pk)
+        wallet_obj.balance += amount
+        wallet_obj.save(update_fields=['balance'])
 
         tx = Transaction.objects.create(
             amount=amount,
@@ -72,6 +75,13 @@ def paystack_callback(request):
         return Response({'error': 'reference is required'},status=status.HTTP_400_BAD_REQUEST)
 
     payment_data = verify_paystack_payment(reference)
+
+    if not payment_data.get('status'):
+        return Response(
+            {'error': 'Payment verification failed'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
     amount = payment_data['data']['amount']/100
     email = payment_data['data']['customer']['email']
