@@ -28,12 +28,16 @@ def initiate_paystack_payment(user, wallet, amount):
         'email': user.email,
         'amount': int(amount * 100),
         'callback_url': 'http://localhost:8000/wallet/callback',
+        'reference': reference,
         'metadata': {
             'user_id': str(user.id),
             'wallet_number': str(wallet.wallet_number),
             'sender_name': str(wallet.user),
         }
     }
+    Transaction.objects.create(
+        status= 'PENDING'
+    )
 
     response = requests.post(settings.PAYSTACK_URL, headers=headers, json=data)
     return response.json()
