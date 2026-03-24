@@ -1,3 +1,4 @@
+import uuid
 from decimal import Decimal
 
 
@@ -17,10 +18,12 @@ from wallet.models import Transaction, Ledger, Wallet
 user = get_user_model()
 
 def initiate_paystack_payment(user, wallet, amount):
+
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
+    reference = str(uuid.uuid4())
     data = {
         'email': user.email,
         'amount': int(amount * 100),
