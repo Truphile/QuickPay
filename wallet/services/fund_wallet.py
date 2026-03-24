@@ -18,7 +18,7 @@ user = get_user_model()
 
 def initiate_paystack_payment(user,amount):
     headers = {
-        'Authorization': f'Bearer{settings.PAYSTACK_SECRET_KEY}',
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',
     }
     data = {
