@@ -36,6 +36,11 @@ def initiate_paystack_payment(user, wallet, amount):
         }
     }
     Transaction.objects.create(
+        amount=amount,
+        sender=wallet,
+        reference=reference,
+        recipient=wallet,
+        transaction_type='CREDIT',
         status= 'PENDING'
     )
 
@@ -94,7 +99,7 @@ def paystack_callback(request):
             {'error': 'Payment was not successful'},
             status=status.HTTP_400_BAD_REQUEST
         )
-    if Transaction.objects.filter(reference=reference).exists():
+    if Transaction.objects.filter(reference=reference, status='SUCCESS').exists():
         return Response(
             {'error': 'Payment already processed'},
             status=status.HTTP_400_BAD_REQUEST
