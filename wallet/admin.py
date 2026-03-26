@@ -16,6 +16,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ['sender', 'receiver', 'amount', 'created_at', 'status']
     list_per_page = 10
 
- @admin.register(Ledger)
+@admin.register(Ledger)
 class LedgerAdmin(admin.ModelAdmin):
      list_display = ['transaction', 'balance_after', 'entry_type', "wallet", "amount", "created_at"]
+     search_fields = ['amount']
