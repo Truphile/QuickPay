@@ -3,6 +3,7 @@ from rest_framework.views import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+import wallet
 from wallet.services.deposit import deposit
 from wallet.services.fund_wallet import initiate_paystack_payment
 from notification.services import create_transfer_notification
@@ -69,14 +70,16 @@ def funded_wallet(request):
     serializer.is_valid(raise_exception=True)
 
     user = request.user
+    wallet = request.user.wallet
     amount = serializer.validated_data['amount']
 
-    payment_response = initiate_paystack_payment(user, amount)
+    payment_response = initiate_paystack_payment(user, wallet, amount)
 
-    return Response(payment_response, status= status.HTTP_200_Ok)
+    return Response(payment_response, status= status.HTTP_200_OK)
 
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def dashboard(request):
     user = request.user
     dashboard_data = get_dashboard_data(user)
