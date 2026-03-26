@@ -39,7 +39,7 @@ def initiate_paystack_payment(user, wallet, amount):
         amount=amount,
         sender=wallet,
         reference=reference,
-        recipient=wallet,
+        receiver=wallet,
         transaction_type='CREDIT',
         status='PENDING'
     )
