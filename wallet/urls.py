@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import transfer_wallet, fund_wallet, funded_wallet
+from .views import transfer_wallet, fund_wallet, funded_wallet, dashboard
+from wallet.services.fund_wallet import paystack_callback
 
 urlpatterns = [
     path("transfer/",transfer_wallet,name="transfer"),
