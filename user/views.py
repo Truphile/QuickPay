@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from services.onboarding_service import create_user_and_wallet
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -17,7 +17,7 @@ def register(request):
 
 @api_view(['POST'])
 def login(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     return Response({"message": "Login successful", "data": serializer.validated_data}, status=status.HTTP_200_OK)
 
