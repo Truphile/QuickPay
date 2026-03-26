@@ -44,7 +44,7 @@ def initiate_paystack_payment(user, wallet, amount):
         status='PENDING'
     )
 
-    response = requests.post(settings.PAYSTACK_URL, headers=headers, json=data)
+    response = requests.post(settings.PAYSTACK_INITIATE_URL, headers=headers, json=data)
     return response.json()
 
 def verify_paystack_payment(reference):
