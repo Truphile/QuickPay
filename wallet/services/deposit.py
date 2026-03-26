@@ -6,23 +6,23 @@ import wallet
 from wallet.models import Wallet, Transaction, Ledger
 
 
-def deposit(recipient: Wallet, amount: Decimal):
+def deposit(receiver: Wallet, amount: Decimal):
     with transaction.atomic():
-        recipient_wallet = Wallet.objects.select_for_update().get(pk=recipient.pk)
+        receiver_wallet = Wallet.objects.select_for_update().get(pk=receiver.pk)
 
-        recipient_wallet.balance += amount
-        recipient_wallet.save(update_fields=['balance'])
+        receiver_wallet.balance += amount
+        receiver_wallet.save(update_fields=['balance'])
 
         transaction_info = Transaction.objects.create(sender=sender,
-                                                      recipient=recipient,
+                                                      receiver=receiver,
                                                       amount=amount,
                                                       transaction_type='CREDIT',
-                                                      status='CREATED',)
+                                                      status='CREATED', )
         Ledger.objects.create(
             transaction=transaction_info,
             amount=amount,
             wallet=wallet,
-            balance_after= recipient_wallet.balance,
+            balance_after= receiver_wallet.balance,
             entry_type='CREDIT',
 
         )
