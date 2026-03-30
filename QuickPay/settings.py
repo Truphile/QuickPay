@@ -15,6 +15,7 @@ load_dotenv()
 import os
 from datetime import timedelta
 from pathlib import Path
+import dj_database_url
 
 from django.conf.global_settings import AUTH_USER_MODEL, EMAIL_HOST, EMAIL_HOST_USER, DEFAULT_FROM_EMAIL
 
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.whiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,7 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'QuickPay.wsgi.application'
 
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -130,6 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 AUTH_USER_MODEL = 'user.User'
 
