@@ -1,0 +1,3 @@
+SELECT * FROM public.user_user
+ORDER BY id ASC;
+DELETE FROM user_user
